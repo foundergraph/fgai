@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FounderGraph AI | Apply — Deal Pipeline</title>
+    <meta name="description" content="Three application experiences a fund can deploy — a plain form, a typeform-style flow, or an agent-led conversation. Every style feeds the same deal pipeline.">
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <link rel="icon" type="image/png" href="/static/icon.png">
+    <link rel="apple-touch-icon" href="/static/icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --paper: #F4F2ED;
+            --ink: #111111;
+            --muted: #6E6B66;
+            --line: rgba(17, 17, 17, 0.14);
+            --accent: #E5431F;
+            --pad: clamp(20px, 4vw, 48px);
+            --max: 1320px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            font-weight: 400;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background: var(--ink);
+            color: var(--paper);
+        }
+
+        .container {
+            max-width: var(--max);
+            margin: 0 auto;
+            padding: 0 var(--pad);
+        }
+
+        .label {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .label .dot {
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+            margin-right: 8px;
+            vertical-align: 1px;
+        }
+
+        /* Header */
+        .site-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 76px;
+            display: flex;
+            align-items: center;
+            z-index: 100;
+            background: rgba(244, 242, 237, 0.75);
+            -webkit-backdrop-filter: blur(14px);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        .site-header.scrolled {
+            border-bottom-color: var(--line);
+        }
+
+        .site-header .container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            color: var(--ink);
+            text-decoration: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .brand:hover {
+            opacity: 0.6;
+        }
+
+        .brand svg {
+            display: block;
+            width: 56px;
+            height: auto;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .header-link {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--ink);
+            text-decoration: none;
+            padding-bottom: 2px;
+            border-bottom: 1px solid var(--ink);
+            transition: opacity 0.2s ease;
+        }
+
+        .header-link:hover {
+            opacity: 0.55;
+        }
+
+        /* Application page */
+        .apply {
+            padding: 150px 0 clamp(64px, 10vh, 120px);
+            background:
+                radial-gradient(ellipse 80% 55% at 70% -10%, rgba(255, 255, 255, 0.9), transparent 70%),
+                var(--paper);
+        }
+
+        .apply-container {
+            max-width: 960px;
+        }
+
+        .apply-head {
+            max-width: 760px;
+            margin-bottom: clamp(36px, 6vh, 64px);
+        }
+
+        .apply-title {
+            margin: 18px 0 20px;
+            font-size: clamp(34px, 5vw, 62px);
+            font-weight: 300;
+            letter-spacing: -0.04em;
+            line-height: 1.03;
+            max-width: 14em;
+        }
+
+        .apply-title em {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-style: italic;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+
+        .apply-lede {
+            max-width: 620px;
+            font-size: clamp(15px, 1.5vw, 18px);
+            font-weight: 300;
+            line-height: 1.6;
+            color: #45433F;
+        }
+
+        /* Intake card */
+        .intake-card {
+            padding: clamp(20px, 3vw, 40px);
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.45);
+        }
+
+        .intake-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            padding-bottom: 20px;
+            margin-bottom: 26px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .intake-tabs {
+            display: flex;
+            gap: 4px;
+            padding: 4px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+        }
+
+        .intake-tab {
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            color: var(--muted);
+            background: none;
+            border: none;
+            border-radius: 999px;
+            padding: 6px 14px;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .intake-tab:hover {
+            color: var(--ink);
+        }
+
+        .intake-tab[aria-selected="true"] {
+            background: var(--ink);
+            color: var(--paper);
+        }
+
+        .text-btn {
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--muted);
+            background: none;
+            border: none;
+            border-bottom: 1px solid var(--line);
+            padding: 0 0 1px;
+            cursor: pointer;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .text-btn:hover {
+            color: var(--ink);
+            border-bottom-color: var(--ink);
+        }
+
+        .intake-pane[hidden] {
+            display: none;
+        }
+
+        /* Plain form */
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            margin-bottom: 20px;
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .field label {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .field input,
+        .field select,
+        .field textarea {
+            width: 100%;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 300;
+            color: var(--ink);
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--line);
+            border-radius: 0;
+            padding: 7px 0;
+            transition: border-color 0.2s ease;
+        }
+
+        .field textarea {
+            resize: vertical;
+            min-height: 64px;
+            line-height: 1.5;
+        }
+
+        .field select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236E6B66' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 2px center;
+            background-size: 10px 6px;
+            cursor: pointer;
+        }
+
+        .field input:focus,
+        .field select:focus,
+        .field textarea:focus {
+            outline: none;
+            border-bottom-color: var(--ink);
+        }
+
+        .field input::placeholder,
+        .field textarea::placeholder {
+            color: var(--muted);
+            opacity: 0.6;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 24px;
+            height: 48px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--paper);
+            background: var(--ink);
+            border: none;
+            border-radius: 999px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.25s ease;
+        }
+
+        .btn svg {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.25s ease;
+        }
+
+        .btn:hover {
+            background: var(--accent);
+        }
+
+        .btn:hover svg {
+            transform: translateX(3px);
+        }
+
+        .btn[disabled] {
+            opacity: 0.5;
+            cursor: wait;
+        }
+
+        .form-status {
+            margin-top: 16px;
+            font-size: 13px;
+            font-weight: 300;
+            color: var(--muted);
+            min-height: 20px;
+        }
+
+        .form-status.ok {
+            color: var(--ink);
+        }
+
+        .form-status.error {
+            color: var(--accent);
+        }
+
+        /* Typeform-style intake */
+        .tf-progress {
+            height: 2px;
+            margin-bottom: 24px;
+            background: var(--line);
+        }
+
+        .tf-progress span {
+            display: block;
+            height: 100%;
+            width: 0;
+            background: var(--ink);
+            transition: width 0.35s ease;
+        }
+
+        .tf-count {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            color: var(--muted);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .tf-question {
+            min-height: 2.4em;
+            margin: 12px 0 20px;
+            font-size: clamp(20px, 2.1vw, 26px);
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .tf-input {
+            width: 100%;
+            font-family: inherit;
+            font-size: 20px;
+            font-weight: 300;
+            color: var(--ink);
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--line);
+            border-radius: 0;
+            padding: 8px 0 10px;
+        }
+
+        textarea.tf-input {
+            font-size: 15px;
+            line-height: 1.5;
+            min-height: 84px;
+            resize: vertical;
+        }
+
+        .tf-input:focus {
+            outline: none;
+            border-bottom-color: var(--ink);
+        }
+
+        .tf-input::placeholder {
+            color: var(--muted);
+            opacity: 0.55;
+        }
+
+        .tf-choices {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            max-height: 264px;
+            overflow-y: auto;
+        }
+
+        .tf-choice {
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 300;
+            text-align: left;
+            color: var(--ink);
+            background: transparent;
+            border: 1px solid var(--line);
+            padding: 10px 14px;
+            cursor: pointer;
+            transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+        }
+
+        .tf-choice:hover {
+            border-color: var(--ink);
+        }
+
+        .tf-choice.selected {
+            background: var(--ink);
+            border-color: var(--ink);
+            color: var(--paper);
+        }
+
+        .tf-hint {
+            min-height: 18px;
+            margin-top: 14px;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .tf-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 22px;
+        }
+
+        .tf-btn {
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--muted);
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .tf-btn:hover {
+            color: var(--ink);
+        }
+
+        .tf-btn.primary {
+            display: inline-flex;
+            align-items: center;
+            height: 40px;
+            padding: 0 20px;
+            border-radius: 999px;
+            background: var(--ink);
+            color: var(--paper);
+            font-size: 13px;
+            transition: background 0.2s ease;
+        }
+
+        .tf-btn.primary:hover {
+            background: var(--accent);
+            color: var(--paper);
+        }
+
+        .tf-btn[disabled] {
+            opacity: 0.35;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        /* Agent-led intake */
+        .agent-thread {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 360px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .agent-thread > * {
+            flex: none;
+        }
+
+        .agent-msg {
+            max-width: 86%;
+            padding: 10px 14px;
+            font-size: 13.5px;
+            font-weight: 300;
+            line-height: 1.5;
+        }
+
+        .agent-msg.bot {
+            align-self: flex-start;
+            background: rgba(17, 17, 17, 0.05);
+            border-radius: 3px 14px 14px 14px;
+            color: var(--ink);
+        }
+
+        .agent-msg.user {
+            align-self: flex-end;
+            background: var(--ink);
+            border-radius: 14px 3px 14px 14px;
+            color: var(--paper);
+        }
+
+        .agent-msg.typing {
+            color: var(--muted);
+            letter-spacing: 0.16em;
+        }
+
+        .agent-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .agent-chips:empty {
+            display: none;
+        }
+
+        .agent-chip {
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--ink);
+            background: transparent;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: border-color 0.15s ease;
+        }
+
+        .agent-chip:hover {
+            border-color: var(--ink);
+        }
+
+        .agent-form {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .agent-form[hidden] {
+            display: none;
+        }
+
+        .agent-form input {
+            flex: 1;
+            min-width: 0;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 300;
+            color: var(--ink);
+            background: transparent;
+            border: none;
+            padding: 10px 0;
+        }
+
+        .agent-form input:focus {
+            outline: none;
+        }
+
+        .agent-form input::placeholder {
+            color: var(--muted);
+            opacity: 0.6;
+        }
+
+        .agent-form button {
+            flex: none;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: var(--paper);
+            background: var(--ink);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .agent-form button:hover {
+            background: var(--accent);
+        }
+
+        .agent-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            align-self: flex-start;
+            width: 86%;
+            margin: 4px 0;
+            padding: 12px 14px;
+            border: 1px solid var(--line);
+            font-size: 12.5px;
+        }
+
+        .agent-summary div {
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .agent-summary span:first-child {
+            color: var(--muted);
+        }
+
+        .agent-summary span:last-child {
+            text-align: right;
+        }
+
+        .agent-send {
+            align-self: flex-start;
+            height: 40px;
+            font-size: 13px;
+            margin: 4px 0 2px;
+        }
+
+        /* What happens next */
+        .next {
+            margin-top: clamp(56px, 9vh, 110px);
+            padding-top: clamp(32px, 5vh, 56px);
+            border-top: 1px solid var(--line);
+        }
+
+        .next-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-bottom: clamp(24px, 4vh, 40px);
+        }
+
+        .next-title {
+            margin-top: 12px;
+            font-size: clamp(26px, 3.4vw, 42px);
+            font-weight: 300;
+            letter-spacing: -0.035em;
+            line-height: 1.05;
+        }
+
+        .next-title em {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-style: italic;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+
+        .next-lede {
+            font-size: 14px;
+            font-weight: 300;
+            color: var(--muted);
+        }
+
+        .next-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+            gap: clamp(20px, 3vw, 40px);
+            align-items: start;
+        }
+
+        .panel {
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.45);
+            padding: clamp(20px, 2.6vw, 34px);
+        }
+
+        .panel-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            padding-bottom: 22px;
+            margin-bottom: 22px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        /* Workflow timeline */
+        .flow {
+            list-style: none;
+        }
+
+        .flow-step {
+            display: grid;
+            grid-template-columns: 26px minmax(0, 1fr) auto;
+            gap: 14px;
+            align-items: baseline;
+            padding: 16px 0;
+            border-top: 1px solid var(--line);
+        }
+
+        .flow-step:first-child {
+            border-top: none;
+            padding-top: 0;
+        }
+
+        .flow-index {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .flow-body h3 {
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+        }
+
+        .flow-body p {
+            margin-top: 3px;
+            font-size: 13px;
+            font-weight: 300;
+            line-height: 1.5;
+            color: var(--muted);
+        }
+
+        .flow-state {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 9.5px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+
+        .flow-state::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            border: 1px solid currentColor;
+        }
+
+        .flow-state:empty::before {
+            display: none;
+        }
+
+        .flow-step[data-state="running"] .flow-state {
+            color: var(--accent);
+        }
+
+        .flow-step[data-state="running"] .flow-state::before {
+            background: var(--accent);
+            border-color: var(--accent);
+            animation: pulse 1.2s ease-in-out infinite;
+        }
+
+        .flow-step[data-state="done"] .flow-state {
+            color: var(--ink);
+        }
+
+        .flow-step[data-state="done"] .flow-state::before {
+            background: var(--ink);
+            border-color: var(--ink);
+        }
+
+        .flow-step[data-state="done"] .flow-body h3 {
+            color: var(--ink);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Artifacts */
+        .artifacts {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1px;
+            background: var(--line);
+            border: 1px solid var(--line);
+        }
+
+        .artifact {
+            background: var(--paper);
+            padding: 20px;
+            min-height: 118px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .artifact-value {
+            font-size: 13px;
+            font-weight: 300;
+            line-height: 1.4;
+            color: var(--muted);
+        }
+
+        .artifact[data-filled="true"] .artifact-value {
+            color: var(--ink);
+            font-weight: 400;
+        }
+
+        /* Footer */
+        .site-footer {
+            padding: 28px 0;
+            border-top: 1px solid var(--line);
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .site-footer .container {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: var(--ink);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            border-bottom-color: var(--ink);
+        }
+
+        /* Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .reveal.in {
+            opacity: 1;
+            transform: none;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            .reveal {
+                opacity: 1;
+                transform: none;
+                transition: none;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 960px) {
+            .next-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .apply {
+                padding-top: 118px;
+            }
+
+            .intake-head {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .field-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .agent-thread {
+                height: 320px;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .intake-tabs {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .intake-tab {
+                flex: 1;
+                padding: 6px 8px;
+            }
+
+            .artifacts {
+                grid-template-columns: 1fr;
+            }
+
+            .tf-question {
+                min-height: 0;
+                margin-bottom: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header" id="site-header">
+        <div class="container">
+            <a href="/" class="brand" aria-label="FounderGraph AI — home">
+                <svg viewBox="0 0 80 40" fill="none" aria-hidden="true">
+                    <path d="M10 10V30M10 10H20M10 20H18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M41.07 12.93A10 10 0 1 0 41.07 27.07L41.07 20H34" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M57 10L50 30M57 10L64 30M52.5 23H61.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M70 10V30" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                </svg>
+            </a>
+            <div class="header-right">
+                <a href="/solutions/dealflow/" class="header-link">← Deal Pipeline</a>
+                <a href="/#access" class="header-link">Request a call</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="apply">
+        <div class="container apply-container">
+            <div class="apply-head">
+                <span class="label"><span class="dot"></span>Deal Pipeline — Application experiences</span>
+                <h1 class="apply-title">Choose how founders <em>apply.</em></h1>
+                <p class="apply-lede">
+                    Three intake experiences your fund can put on its own site — a plain form,
+                    a typeform-style flow, or an agent-led conversation. Every one delivers
+                    the same structured application into your deal pipeline.
+                </p>
+            </div>
+
+            <div class="intake-card reveal">
+                <div class="intake-head">
+                    <div class="intake-tabs" role="tablist" aria-label="Preview an application experience">
+                        <button class="intake-tab" type="button" role="tab" data-mode="plain" aria-selected="true">Plain</button>
+                        <button class="intake-tab" type="button" role="tab" data-mode="typeform" aria-selected="false">Typeform</button>
+                        <button class="intake-tab" type="button" role="tab" data-mode="agent" aria-selected="false">Agent</button>
+                    </div>
+                    <button class="text-btn" id="fill-sample" type="button">Fill with sample</button>
+                </div>
+
+                <!-- Plain form -->
+                <div class="intake-pane" data-pane="plain">
+                    <form id="application-form" class="app-form" autocomplete="off">
+                        <div class="field-row">
+                            <div class="field">
+                                <label for="field-0">Founder name</label>
+                                <input id="field-0" name="field-0" type="text" placeholder="Full name" required>
+                            </div>
+                            <div class="field">
+                                <label for="field-1">Founder email</label>
+                                <input id="field-1" name="field-1" type="email" placeholder="name@company.com" required>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <div class="field">
+                                <label for="field-2">Startup name</label>
+                                <input id="field-2" name="field-2" type="text" placeholder="Company name" required>
+                            </div>
+                            <div class="field">
+                                <label for="field-3">Website</label>
+                                <input id="field-3" name="field-3" type="text" placeholder="https://">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="field-4">One-line description</label>
+                            <input id="field-4" name="field-4" type="text" placeholder="What is the company building?" required>
+                        </div>
+                        <div class="field-row">
+                            <div class="field">
+                                <label for="field-5">Industry</label>
+                                <select id="field-5" name="field-5" required>
+                                    <option value="" disabled selected>Select an option</option>
+                                    <option>SaaS / Enterprise</option>
+                                    <option>Fintech</option>
+                                    <option>Healthtech / Biotech</option>
+                                    <option>Consumer</option>
+                                    <option>AI / ML</option>
+                                    <option>Climate / Energy</option>
+                                    <option>Hardware / Deep Tech</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label for="field-6">Stage</label>
+                                <select id="field-6" name="field-6" required>
+                                    <option value="" disabled selected>Select an option</option>
+                                    <option>Idea</option>
+                                    <option>Pre-seed</option>
+                                    <option>Seed</option>
+                                    <option>Series A</option>
+                                    <option>Series B+</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <div class="field">
+                                <label for="field-7">Country / HQ</label>
+                                <input id="field-7" name="field-7" type="text" placeholder="City, country">
+                            </div>
+                            <div class="field">
+                                <label for="field-8">Monthly revenue (USD)</label>
+                                <input id="field-8" name="field-8" type="text" inputmode="numeric" placeholder="0">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="field-9">Funding sought (USD)</label>
+                            <input id="field-9" name="field-9" type="text" inputmode="numeric" placeholder="1,500,000" required>
+                        </div>
+                        <div class="field">
+                            <label for="field-10">Problem and solution</label>
+                            <textarea id="field-10" name="field-10" rows="3" placeholder="What problem do you solve, and how?" required></textarea>
+                        </div>
+                        <div class="field">
+                            <label for="field-11">Traction and team highlights</label>
+                            <textarea id="field-11" name="field-11" rows="2" placeholder="Milestones, revenue, team background"></textarea>
+                        </div>
+                        <div class="field">
+                            <label for="field-12">Pitch deck link</label>
+                            <input id="field-12" name="field-12" type="text" placeholder="https://">
+                        </div>
+                        <button class="btn" type="submit" id="submit-application">
+                            Submit application
+                            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Typeform-style intake -->
+                <div class="intake-pane" data-pane="typeform" hidden>
+                    <div class="tf-progress"><span id="tf-bar"></span></div>
+                    <span class="tf-count" id="tf-count"></span>
+                    <h3 class="tf-question" id="tf-question"></h3>
+                    <div class="tf-control" id="tf-control"></div>
+                    <p class="tf-hint" id="tf-hint"></p>
+                    <div class="tf-nav">
+                        <button class="tf-btn" type="button" id="tf-back">← Back</button>
+                        <button class="tf-btn primary" type="button" id="tf-next">Continue ↵</button>
+                    </div>
+                </div>
+
+                <!-- Agent-led intake -->
+                <div class="intake-pane" data-pane="agent" hidden>
+                    <div class="agent-thread" id="agent-thread" aria-live="polite"></div>
+                    <div class="agent-chips" id="agent-chips"></div>
+                    <form class="agent-form" id="agent-form" autocomplete="off">
+                        <input id="agent-input" type="text" placeholder="Type your answer…" aria-label="Your answer">
+                        <button type="submit" aria-label="Send answer">→</button>
+                    </form>
+                </div>
+
+                <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+            </div>
+
+            <!-- What happens next -->
+            <section class="next">
+                <div class="next-head">
+                    <div>
+                        <span class="label">After you send</span>
+                        <h2 class="next-title">What happens <em>next.</em></h2>
+                    </div>
+                    <p class="next-lede">The workflow runs the moment the application lands.</p>
+                </div>
+
+                <div class="next-grid">
+                    <div class="panel">
+                        <div class="panel-head">
+                            <span class="label">Workflow</span>
+                        </div>
+                        <ol class="flow" id="workflow">
+                            <li class="flow-step" data-step="capture" data-state="queued">
+                                <span class="flow-index">01</span>
+                                <div class="flow-body">
+                                    <h3>Capture</h3>
+                                    <p>One structured application: company, stage, MRR, ask, traction and deck.</p>
+                                </div>
+                                <span class="flow-state"></span>
+                            </li>
+                            <li class="flow-step" data-step="log" data-state="queued">
+                                <span class="flow-index">02</span>
+                                <div class="flow-body">
+                                    <h3>Log</h3>
+                                    <p>A row lands in the shared deal sheet; the founder is confirmed and the team notified.</p>
+                                </div>
+                                <span class="flow-state"></span>
+                            </li>
+                            <li class="flow-step" data-step="decide" data-state="queued">
+                                <span class="flow-index">03</span>
+                                <div class="flow-body">
+                                    <h3>Decide in one click</h3>
+                                    <p>A partner sets Status to Interested — the only manual action.</p>
+                                </div>
+                                <span class="flow-state"></span>
+                            </li>
+                            <li class="flow-step" data-step="engage" data-state="queued">
+                                <span class="flow-index">04</span>
+                                <div class="flow-body">
+                                    <h3>Engage</h3>
+                                    <p>The founder is emailed a booking link and picks a slot.</p>
+                                </div>
+                                <span class="flow-state"></span>
+                            </li>
+                            <li class="flow-step" data-step="track" data-state="queued">
+                                <span class="flow-index">05</span>
+                                <div class="flow-body">
+                                    <h3>Track</h3>
+                                    <p>The meeting time is written back to the same row.</p>
+                                </div>
+                                <span class="flow-state"></span>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div class="artifacts" id="artifacts">
+                        <div class="artifact" data-artifact="row">
+                            <span class="label">Deal sheet row</span>
+                            <p class="artifact-value">Aster Labs · Seed · Interested</p>
+                        </div>
+                        <div class="artifact" data-artifact="confirm">
+                            <span class="label">Founder confirmation</span>
+                            <p class="artifact-value">Sent on submission</p>
+                        </div>
+                        <div class="artifact" data-artifact="booking">
+                            <span class="label">Booking link</span>
+                            <p class="artifact-value">Sent when a partner marks Interested</p>
+                        </div>
+                        <div class="artifact" data-artifact="meeting">
+                            <span class="label">Meeting time</span>
+                            <p class="artifact-value">Written back after the founder books</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <span>© 2026 FounderGraph AI</span>
+            <div class="footer-links">
+                <a href="/solutions/dealflow/">Deal Pipeline</a>
+                <a href="/">Home</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ---------------------------------------------------------------------
+        // Applications post to the live n8n form.
+        // ---------------------------------------------------------------------
+        const DEMO_FORM_URL = 'https://fgai.app.n8n.cloud/form/startup-application';
+
+        // Header hairline on scroll
+        const header = document.getElementById('site-header');
+        const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 8);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+
+        // Reveal on scroll
+        const items = document.querySelectorAll('.reveal');
+        if ('IntersectionObserver' in window) {
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in');
+                        io.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+            items.forEach((el) => io.observe(el));
+        } else {
+            items.forEach(el => el.classList.add('in'));
+        }
+
+        // ---------------------------------------------------------------------
+        // Intake modes — plain form, typeform-style flow, agent-led conversation.
+        // All three collect the same 13 fields and post them to the same form.
+        // ---------------------------------------------------------------------
+        const form = document.getElementById('application-form');
+        const statusEl = document.getElementById('form-status');
+        const submitBtn = document.getElementById('submit-application');
+        const answers = {};
+
+        const FIELDS = Array.from(form.querySelectorAll('input[name], select[name], textarea[name]')).map((el) => ({
+            name: el.name,
+            kind: el.tagName === 'SELECT' ? 'select' : el.tagName === 'TEXTAREA' ? 'textarea' : 'text',
+            inputmode: el.getAttribute('inputmode'),
+            placeholder: el.getAttribute('placeholder') || '',
+            required: el.required,
+            options: el.tagName === 'SELECT' ? Array.from(el.options).filter((o) => o.value).map((o) => o.value) : null
+        }));
+
+        const PROMPTS = {
+            'field-0': "What's your name?",
+            'field-1': "What's your email?",
+            'field-2': "What's your startup called?",
+            'field-3': "What's your website?",
+            'field-4': 'Describe what you are building in one line.',
+            'field-5': 'Which industry are you in?',
+            'field-6': 'What stage are you at?',
+            'field-7': 'Where are you based?',
+            'field-8': "What's your monthly revenue in USD?",
+            'field-9': 'How much are you raising, in USD?',
+            'field-10': 'What problem do you solve — and how?',
+            'field-11': 'Any traction or team highlights?',
+            'field-12': 'Last one — a link to your pitch deck?'
+        };
+
+        const emailOk = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+
+        function fieldValid(field, value) {
+            const v = (value || '').trim();
+            if (!field.required) return true;
+            if (v === '') return false;
+            if (field.name === 'field-1') return emailOk(v);
+            return true;
+        }
+
+        const intakeTabs = Array.from(document.querySelectorAll('.intake-tab'));
+        function setMode(mode) {
+            statusEl.className = 'form-status';
+            statusEl.textContent = '';
+            intakeTabs.forEach((tab) => {
+                tab.setAttribute('aria-selected', tab.dataset.mode === mode ? 'true' : 'false');
+            });
+            document.querySelectorAll('.intake-pane').forEach((pane) => {
+                pane.hidden = pane.dataset.pane !== mode;
+            });
+            if (mode === 'typeform') renderTypeform();
+            if (mode === 'agent') startAgent();
+        }
+        intakeTabs.forEach((tab) => tab.addEventListener('click', () => setMode(tab.dataset.mode)));
+
+        // ---- Typeform-style ----
+        const tfBar = document.getElementById('tf-bar');
+        const tfCount = document.getElementById('tf-count');
+        const tfQuestion = document.getElementById('tf-question');
+        const tfControl = document.getElementById('tf-control');
+        const tfHint = document.getElementById('tf-hint');
+        const tfBack = document.getElementById('tf-back');
+        const tfNext = document.getElementById('tf-next');
+        let tfIndex = 0;
+        let tfAdvancing = false;
+
+        function syncTypeformNext(field) {
+            tfNext.disabled = !fieldValid(field, answers[field.name]);
+        }
+
+        function renderTypeform() {
+            tfAdvancing = false;
+            const field = FIELDS[tfIndex];
+            const value = answers[field.name] || '';
+
+            tfCount.textContent = `${String(tfIndex + 1).padStart(2, '0')} / ${String(FIELDS.length).padStart(2, '0')}`;
+            tfQuestion.textContent = PROMPTS[field.name];
+            tfControl.innerHTML = '';
+
+            let input = null;
+            if (field.kind === 'select') {
+                const wrap = document.createElement('div');
+                wrap.className = 'tf-choices';
+                field.options.forEach((opt) => {
+                    const b = document.createElement('button');
+                    b.type = 'button';
+                    b.className = 'tf-choice' + (value === opt ? ' selected' : '');
+                    b.textContent = opt;
+                    b.addEventListener('click', () => {
+                        if (tfAdvancing) return;
+                        tfAdvancing = true;
+                        answers[field.name] = opt;
+                        wrap.querySelectorAll('.tf-choice').forEach((el) => {
+                            el.classList.toggle('selected', el === b);
+                        });
+                        syncTypeformNext(field);
+                        window.setTimeout(tfAdvance, 180);
+                    });
+                    wrap.appendChild(b);
+                });
+                tfControl.appendChild(wrap);
+            } else if (field.kind === 'textarea') {
+                input = document.createElement('textarea');
+                input.className = 'tf-input';
+                input.rows = 3;
+                input.placeholder = field.placeholder;
+                input.value = value;
+                tfControl.appendChild(input);
+            } else {
+                input = document.createElement('input');
+                input.className = 'tf-input';
+                input.type = field.name === 'field-1' ? 'email' : 'text';
+                if (field.inputmode) input.inputMode = field.inputmode;
+                input.placeholder = field.placeholder;
+                input.value = value;
+                tfControl.appendChild(input);
+            }
+
+            if (input) {
+                input.addEventListener('input', () => {
+                    answers[field.name] = input.value;
+                    syncTypeformNext(field);
+                });
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && field.kind !== 'textarea') {
+                        e.preventDefault();
+                        tfAdvance();
+                    }
+                });
+            }
+
+            tfHint.textContent = field.required ? 'Press Enter ↵ to continue' : 'Optional — press Enter ↵ to skip';
+            tfNext.textContent = tfIndex === FIELDS.length - 1 ? 'Submit application' : 'Continue ↵';
+            tfBack.disabled = tfIndex === 0;
+            tfBar.style.width = `${((tfIndex + 1) / FIELDS.length) * 100}%`;
+            syncTypeformNext(field);
+
+            window.setTimeout(() => { if (input) input.focus(); }, 60);
+        }
+
+        function tfAdvance() {
+            const field = FIELDS[tfIndex];
+            if (!fieldValid(field, answers[field.name])) return;
+            if (tfIndex === FIELDS.length - 1) {
+                submitApplication(answers, [tfNext]);
+                return;
+            }
+            tfIndex += 1;
+            renderTypeform();
+        }
+
+        tfBack.addEventListener('click', () => {
+            if (tfIndex > 0) {
+                tfIndex -= 1;
+                renderTypeform();
+            }
+        });
+        tfNext.addEventListener('click', tfAdvance);
+
+        // ---- Agent-led ----
+        const agentThread = document.getElementById('agent-thread');
+        const agentChips = document.getElementById('agent-chips');
+        const agentForm = document.getElementById('agent-form');
+        const agentInput = document.getElementById('agent-input');
+        let agentIndex = 0;
+        let agentStarted = false;
+        let agentTimer = null;
+
+        function agentBubble(text, cls = 'bot') {
+            const el = document.createElement('div');
+            el.className = `agent-msg ${cls}`;
+            el.textContent = text;
+            agentThread.appendChild(el);
+            agentThread.scrollTop = agentThread.scrollHeight;
+            return el;
+        }
+
+        function agentChip(text, onClick) {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'agent-chip';
+            b.textContent = text;
+            b.addEventListener('click', onClick);
+            agentChips.appendChild(b);
+        }
+
+        function startAgent() {
+            if (agentStarted) {
+                agentInput.focus();
+                return;
+            }
+            agentStarted = true;
+            agentIndex = 0;
+            agentThread.innerHTML = '';
+            agentChips.innerHTML = '';
+            agentBubble('Hi — I can take your application. A few quick questions, then it goes straight into the pipeline.');
+            askAgent();
+        }
+
+        function askAgent() {
+            const field = FIELDS[agentIndex];
+            if (!field) {
+                finishAgent();
+                return;
+            }
+
+            agentChips.innerHTML = '';
+            agentInput.value = '';
+            agentInput.disabled = false;
+            agentForm.hidden = false;
+
+            if (field.kind === 'select') {
+                agentForm.hidden = true;
+                field.options.forEach((opt) => agentChip(opt, () => agentAnswer(opt)));
+            } else if (!field.required) {
+                agentChip('Skip', () => agentAnswer(''));
+            }
+
+            const typing = agentBubble('…', 'bot typing');
+            window.clearTimeout(agentTimer);
+            agentTimer = window.setTimeout(() => {
+                typing.remove();
+                agentBubble(PROMPTS[field.name]);
+                agentInput.placeholder = field.name === 'field-1' ? 'name@company.com' : 'Type your answer…';
+                if (field.kind !== 'select') agentInput.focus();
+            }, 320);
+        }
+
+        function agentAnswer(raw) {
+            const field = FIELDS[agentIndex];
+            if (!field) return;
+            const value = (raw || '').trim();
+
+            if (field.required && value === '') {
+                agentBubble('I need this one to move your application forward.', 'bot');
+                return;
+            }
+            if (field.name === 'field-1' && value !== '' && !emailOk(value)) {
+                agentBubble("That doesn't look like an email — mind checking it?", 'bot');
+                return;
+            }
+
+            answers[field.name] = value;
+            agentBubble(value === '' ? 'Skipped' : value, 'user');
+            agentChips.innerHTML = '';
+            agentIndex += 1;
+            window.clearTimeout(agentTimer);
+            agentTimer = window.setTimeout(askAgent, 320);
+        }
+
+        agentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            agentAnswer(agentInput.value);
+            agentInput.value = '';
+        });
+
+        function finishAgent() {
+            agentForm.hidden = true;
+            agentChips.innerHTML = '';
+            agentBubble("That's everything. Here's what I'll send to the fund:");
+
+            const summary = document.createElement('div');
+            summary.className = 'agent-summary';
+            [['Name', 'field-0'], ['Startup', 'field-2'], ['Industry', 'field-5'], ['Stage', 'field-6'], ['Raising', 'field-9']]
+                .forEach(([label, key]) => {
+                    const row = document.createElement('div');
+                    const k = document.createElement('span');
+                    const v = document.createElement('span');
+                    k.textContent = label;
+                    v.textContent = answers[key] || '—';
+                    row.append(k, v);
+                    summary.appendChild(row);
+                });
+            agentThread.appendChild(summary);
+
+            const send = document.createElement('button');
+            send.type = 'button';
+            send.className = 'btn agent-send';
+            send.textContent = 'Send application';
+            send.addEventListener('click', () => submitApplication(answers, [send]));
+            agentThread.appendChild(send);
+            agentThread.scrollTop = agentThread.scrollHeight;
+        }
+
+        // ---- Sample data ----
+        const sample = {
+            'field-0': 'Maya Chen',
+            'field-1': 'maya.test@asterlabs.com',
+            'field-2': 'Aster Labs',
+            'field-3': 'https://asterlabs.example',
+            'field-4': 'Battery analytics for mid-size commercial fleets.',
+            'field-5': 'AI / ML',
+            'field-6': 'Seed',
+            'field-7': 'San Francisco, CA',
+            'field-8': '42000',
+            'field-9': '1500000',
+            'field-10': 'Fleet operators run maintenance blind. We predict battery degradation from telematics data so teams replace packs before they fail.',
+            'field-11': '12 paying fleets, $500k ARR, founders ex-Tesla and Stripe.',
+            'field-12': 'https://asterlabs.example/deck.pdf'
+        };
+
+        document.getElementById('fill-sample').addEventListener('click', () => {
+            Object.assign(answers, sample);
+            const mode = document.querySelector('.intake-tab[aria-selected="true"]').dataset.mode;
+
+            if (mode === 'typeform') {
+                tfIndex = FIELDS.length - 1;
+                renderTypeform();
+                return;
+            }
+
+            if (mode === 'agent') {
+                window.clearTimeout(agentTimer);
+                agentStarted = true;
+                agentIndex = FIELDS.length;
+                agentThread.innerHTML = '';
+                agentChips.innerHTML = '';
+                agentBubble('Hi — I can take your application. A few quick questions, then it goes straight into the pipeline.');
+                FIELDS.forEach((field) => {
+                    agentBubble(PROMPTS[field.name]);
+                    agentBubble(answers[field.name] || 'Skipped', 'user');
+                });
+                finishAgent();
+                return;
+            }
+
+            Object.entries(sample).forEach(([name, value]) => {
+                if (form.elements[name]) form.elements[name].value = value;
+            });
+        });
+
+        // ---- Submit ----
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            Object.assign(answers, Object.fromEntries(new FormData(form).entries()));
+            submitApplication(answers, [submitBtn]);
+        });
+
+        async function submitApplication(values, buttons = []) {
+            const data = new FormData();
+            Object.entries(values).forEach(([name, value]) => data.append(name, value || ''));
+
+            statusEl.className = 'form-status';
+            statusEl.textContent = 'Sending application…';
+            buttons.forEach((b) => { b.disabled = true; });
+
+            try {
+                const res = await fetch(DEMO_FORM_URL, { method: 'POST', body: data });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                statusEl.className = 'form-status ok';
+                statusEl.textContent = 'Application received.';
+            } catch (err) {
+                statusEl.className = 'form-status error';
+                statusEl.textContent = 'Could not reach the workflow. Please try again.';
+                buttons.forEach((b) => { b.disabled = false; });
+            }
+        }
+
+        // Preselect a style from the query string, e.g. /apply/?style=agent
+        const requested = new URLSearchParams(window.location.search).get('style');
+        if (['plain', 'typeform', 'agent'].includes(requested)) setMode(requested);
+    </script>
+</body>
+</html>

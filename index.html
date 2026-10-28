@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FounderGraph AI | AI solutions for venture capital</title>
+    <meta name="description" content="FounderGraph AI — AI solutions for venture capital. Launching soon.">
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <link rel="icon" type="image/png" href="/static/icon.png">
+    <link rel="apple-touch-icon" href="/static/icon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --paper: #F4F2ED;
+            --ink: #111111;
+            --muted: #6E6B66;
+            --line: rgba(17, 17, 17, 0.14);
+            --accent: #E5431F;
+            --pad: clamp(20px, 4vw, 48px);
+            --max: 1320px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            font-weight: 400;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background: var(--ink);
+            color: var(--paper);
+        }
+
+        .container {
+            max-width: var(--max);
+            margin: 0 auto;
+            padding: 0 var(--pad);
+        }
+
+        .label {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .label .dot {
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+            margin-right: 8px;
+            vertical-align: 1px;
+        }
+
+        /* Header */
+        .site-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 76px;
+            display: flex;
+            align-items: center;
+            z-index: 100;
+            background: rgba(244, 242, 237, 0.75);
+            -webkit-backdrop-filter: blur(14px);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid transparent;
+        }
+
+        .site-header .container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            color: var(--ink);
+            text-decoration: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .brand:hover {
+            opacity: 0.6;
+        }
+
+        .brand svg {
+            display: block;
+            width: 56px;
+            height: auto;
+        }
+
+        /* Hero */
+        .hero {
+            padding: 150px 0 clamp(48px, 7vh, 84px);
+            min-height: 100svh;
+            display: flex;
+            align-items: center;
+            background:
+                radial-gradient(ellipse 80% 55% at 70% -10%, rgba(255, 255, 255, 0.9), transparent 70%),
+                var(--paper);
+        }
+
+        .hero .container {
+            width: 100%;
+        }
+
+        .hero-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            padding-bottom: clamp(36px, 7vh, 80px);
+        }
+
+        .display {
+            font-size: clamp(40px, 6.4vw, 92px);
+            font-weight: 300;
+            letter-spacing: -0.045em;
+            line-height: 0.98;
+            max-width: 12em;
+        }
+
+        .display em {
+            display: block;
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-style: italic;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            padding-right: 0.06em;
+            margin-top: 0.06em;
+        }
+
+        .hero-bottom {
+            margin-top: clamp(40px, 7vh, 72px);
+            max-width: 620px;
+        }
+
+        .contact {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-top: 32px;
+            border-top: 1px solid var(--line);
+        }
+
+        .contact a {
+            font-size: clamp(15px, 1.4vw, 17px);
+            color: var(--ink);
+            text-decoration: none;
+            border-bottom: 1px solid var(--line);
+            padding-bottom: 3px;
+            width: fit-content;
+            transition: border-color 0.2s ease;
+        }
+
+        .contact a:hover {
+            border-color: var(--ink);
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding-top: 118px;
+            }
+
+            .hero-meta {
+                padding-bottom: 36px;
+            }
+
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .brand, .contact a { transition: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header" id="site-header">
+        <div class="container">
+            <a href="/" class="brand" aria-label="FounderGraph AI — home">
+                <svg viewBox="0 0 80 40" fill="none" aria-hidden="true">
+                    <path d="M10 10V30M10 10H20M10 20H18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M41.07 12.93A10 10 0 1 0 41.07 27.07L41.07 20H34" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M57 10L50 30M57 10L64 30M52.5 23H61.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M70 10V30" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                </svg>
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-meta">
+                    <span class="label"><span class="dot"></span>Launching soon</span>
+                </div>
+
+                <h1 class="display">
+                    AI Solutions
+                    <em>for Venture Capital</em>
+                </h1>
+
+                <div class="hero-bottom">
+                    <div class="contact">
+                        <span class="label">Contact</span>
+                        <a href="mailto:allen@foundergraphai.com">allen@foundergraphai.com</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

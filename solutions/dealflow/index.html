@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FounderGraph AI | Deal Pipeline — an AI-native venture workflow</title>
+    <meta name="description" content="Every inbound pitch goes through one automated pipeline — captured, logged to the deal sheet, reviewed in one click, booked and tracked. From application to scheduled call, with no manual admin.">
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <link rel="icon" type="image/png" href="/static/icon.png">
+    <link rel="apple-touch-icon" href="/static/icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --paper: #F4F2ED;
+            --ink: #111111;
+            --muted: #6E6B66;
+            --line: rgba(17, 17, 17, 0.14);
+            --accent: #E5431F;
+            --pad: clamp(20px, 4vw, 48px);
+            --max: 1320px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            font-weight: 400;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background: var(--ink);
+            color: var(--paper);
+        }
+
+        .container {
+            max-width: var(--max);
+            margin: 0 auto;
+            padding: 0 var(--pad);
+        }
+
+        /* Micro labels */
+        .label {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .label .dot {
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+            margin-right: 8px;
+            vertical-align: 1px;
+        }
+
+        /* Header */
+        .site-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 76px;
+            display: flex;
+            align-items: center;
+            z-index: 100;
+            background: rgba(244, 242, 237, 0.75);
+            -webkit-backdrop-filter: blur(14px);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        .site-header.scrolled {
+            border-bottom-color: var(--line);
+        }
+
+        .site-header .container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            color: var(--ink);
+            text-decoration: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .brand:hover {
+            opacity: 0.6;
+        }
+
+        .brand svg {
+            display: block;
+            width: 56px;
+            height: auto;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        /* Solutions dropdown */
+        .nav-drop {
+            position: relative;
+        }
+
+        .nav-tab {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 0;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--ink);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        .nav-tab:hover,
+        .nav-tab[aria-expanded="true"] {
+            opacity: 0.55;
+        }
+
+        .nav-tab svg {
+            width: 9px;
+            height: 9px;
+            transition: transform 0.2s ease;
+        }
+
+        .nav-tab[aria-expanded="true"] svg {
+            transform: rotate(180deg);
+        }
+
+        .nav-menu {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            min-width: 260px;
+            display: flex;
+            flex-direction: column;
+            padding: 6px;
+            background: rgba(255, 255, 255, 0.94);
+            -webkit-backdrop-filter: blur(14px);
+            backdrop-filter: blur(14px);
+            border: 1px solid var(--line);
+            box-shadow: 0 18px 40px rgba(17, 17, 17, 0.08);
+        }
+
+        .nav-menu[hidden] {
+            display: none;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 10px 12px;
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--ink);
+            text-decoration: none;
+            transition: background 0.15s ease;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(17, 17, 17, 0.05);
+        }
+
+        .nav-menu a[aria-current="page"] {
+            font-weight: 500;
+        }
+
+        .nav-menu .tag {
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--muted);
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 2px 7px;
+            white-space: nowrap;
+        }
+
+        .header-link {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--ink);
+            text-decoration: none;
+            padding-bottom: 2px;
+            border-bottom: 1px solid var(--ink);
+            transition: opacity 0.2s ease;
+        }
+
+        .header-link:hover {
+            opacity: 0.55;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100svh;
+            display: flex;
+            align-items: center;
+            padding: 140px 0 clamp(40px, 6vh, 72px);
+            background:
+                radial-gradient(ellipse 80% 55% at 70% -10%, rgba(255, 255, 255, 0.9), transparent 70%),
+                var(--paper);
+        }
+
+        .hero .container {
+            width: 100%;
+        }
+
+        .hero-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: clamp(48px, 11vh, 136px);
+        }
+
+        .display {
+            font-size: clamp(42px, 7.6vw, 106px);
+            font-weight: 300;
+            letter-spacing: -0.045em;
+            line-height: 0.98;
+            max-width: 13em;
+        }
+
+        .display em {
+            display: block;
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-style: italic;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            padding-right: 0.06em;
+            margin-top: 0.06em;
+        }
+
+        .hero-bottom {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(32px, 6vw, 96px);
+            align-items: end;
+            margin-top: clamp(48px, 9vh, 104px);
+            padding-top: 36px;
+            border-top: 1px solid var(--line);
+        }
+
+        .lede {
+            max-width: 540px;
+            font-size: clamp(16px, 1.6vw, 19px);
+            font-weight: 300;
+            line-height: 1.6;
+            color: #45433F;
+        }
+
+        .access {
+            justify-self: end;
+            width: min(440px, 100%);
+        }
+
+        /* Access form */
+        .access-form {
+            display: flex;
+            align-items: stretch;
+            gap: 10px;
+        }
+
+        .access-form input[type="email"] {
+            flex: 1;
+            min-width: 0;
+            padding: 13px 2px;
+            font-family: inherit;
+            font-size: 15px;
+            color: var(--ink);
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--ink);
+            border-radius: 0;
+        }
+
+        .access-form input[type="email"]::placeholder {
+            color: var(--muted);
+        }
+
+        .access-form input[type="email"]:focus {
+            outline: none;
+            border-bottom-color: var(--accent);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 24px;
+            height: 48px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--paper);
+            background: var(--ink);
+            border: none;
+            border-radius: 999px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.25s ease;
+        }
+
+        .btn svg {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.25s ease;
+        }
+
+        .btn:hover {
+            background: var(--accent);
+        }
+
+        .btn:hover svg {
+            transform: translateX(3px);
+        }
+
+
+        .nw {
+            white-space: nowrap;
+        }
+
+        /* Sections */
+        .section {
+            padding: clamp(72px, 11vh, 140px) 0;
+            border-top: 1px solid var(--line);
+        }
+
+        .section-head {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 24px;
+            align-items: baseline;
+            margin-bottom: clamp(40px, 6vh, 72px);
+        }
+
+        .section-title {
+            font-size: clamp(34px, 4.6vw, 64px);
+            font-weight: 300;
+            letter-spacing: -0.035em;
+            line-height: 1.05;
+        }
+
+        /* Live demo */
+        .workspace {
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+            gap: clamp(20px, 3vw, 40px);
+            align-items: start;
+        }
+
+        .panel {
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.45);
+            padding: clamp(20px, 2.6vw, 34px);
+        }
+
+        .panel-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            padding-bottom: 22px;
+            margin-bottom: 22px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .intake-options {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .intake-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            padding: 18px 0;
+            border-top: 1px solid var(--line);
+            color: var(--ink);
+            text-decoration: none;
+            transition: padding-left 0.2s ease;
+        }
+
+        .intake-option:first-child {
+            border-top: none;
+            padding-top: 2px;
+        }
+
+        .intake-option:hover {
+            padding-left: 10px;
+        }
+
+        .intake-option-name {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+        }
+
+        .intake-option-desc {
+            display: block;
+            margin-top: 3px;
+            font-size: 12.5px;
+            font-weight: 300;
+            color: var(--muted);
+        }
+
+        .intake-option-arrow {
+            flex: none;
+            color: var(--muted);
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+
+        .intake-option:hover .intake-option-arrow {
+            color: var(--ink);
+            transform: translateX(4px);
+        }
+
+        .intake-note {
+            margin-top: 18px;
+            font-size: 12px;
+            font-weight: 300;
+            color: var(--muted);
+        }
+
+        .flow {
+            list-style: none;
+        }
+
+        .flow-step {
+            display: grid;
+            grid-template-columns: 26px minmax(0, 1fr) auto;
+            gap: 14px;
+            align-items: baseline;
+            padding: 16px 0;
+            border-top: 1px solid var(--line);
+        }
+
+        .flow-step:first-child {
+            border-top: none;
+            padding-top: 0;
+        }
+
+        .flow-index {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .flow-body h3 {
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+        }
+
+        .flow-body p {
+            margin-top: 3px;
+            font-size: 13px;
+            font-weight: 300;
+            line-height: 1.5;
+            color: var(--muted);
+        }
+
+        .flow-state {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 9.5px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+
+        .flow-state::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            border: 1px solid currentColor;
+        }
+
+        .flow-state:empty::before {
+            display: none;
+        }
+
+        .flow-step[data-state="running"] .flow-state {
+            color: var(--accent);
+        }
+
+        .flow-step[data-state="running"] .flow-state::before {
+            background: var(--accent);
+            border-color: var(--accent);
+            animation: pulse 1.2s ease-in-out infinite;
+        }
+
+        .flow-step[data-state="done"] .flow-state {
+            color: var(--ink);
+        }
+
+        .flow-step[data-state="done"] .flow-state::before {
+            background: var(--ink);
+            border-color: var(--ink);
+        }
+
+        .flow-step[data-state="done"] .flow-body h3 {
+            color: var(--ink);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .artifacts {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 1px;
+            margin-top: clamp(20px, 3vw, 40px);
+            background: var(--line);
+            border: 1px solid var(--line);
+        }
+
+        .artifact {
+            background: var(--paper);
+            padding: 20px;
+            min-height: 104px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .artifact-value {
+            font-size: 13px;
+            font-weight: 300;
+            line-height: 1.4;
+            color: var(--muted);
+        }
+
+        .artifact[data-filled="true"] .artifact-value {
+            color: var(--ink);
+            font-weight: 400;
+        }
+
+        /* Closing */
+        .closing {
+            padding: clamp(96px, 16vh, 200px) 0;
+            border-top: 1px solid var(--line);
+        }
+
+        .closing .section-head {
+            margin-bottom: 0;
+        }
+
+        .closing-title {
+            font-size: clamp(38px, 5.6vw, 84px);
+            font-weight: 300;
+            letter-spacing: -0.04em;
+            line-height: 1.02;
+            max-width: 14em;
+        }
+
+        .closing-title em {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-style: italic;
+            font-weight: 400;
+            letter-spacing: -0.005em;
+        }
+
+        .closing-body {
+            margin-top: clamp(32px, 5vh, 56px);
+            display: grid;
+            grid-template-columns: 140px 1fr 1.1fr;
+            gap: 24px;
+            align-items: end;
+        }
+
+        .closing-body .lede {
+            grid-column: 2;
+        }
+
+        .closing-body .access {
+            grid-column: 3;
+        }
+
+        .fineprint {
+            margin-top: 18px;
+            font-size: 12px;
+            color: var(--muted);
+            letter-spacing: 0.02em;
+        }
+
+        /* Footer */
+        .footer {
+            padding: clamp(48px, 7vh, 80px) 0 32px;
+            border-top: 1px solid var(--line);
+        }
+
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 32px;
+            flex-wrap: wrap;
+            padding-bottom: clamp(48px, 8vh, 88px);
+        }
+
+        .footer-brand {
+            font-size: clamp(28px, 4vw, 52px);
+            font-weight: 300;
+            letter-spacing: -0.04em;
+            line-height: 1;
+        }
+
+        .footer-cols {
+            display: flex;
+            gap: clamp(40px, 7vw, 96px);
+        }
+
+        .footer-col {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-col .label {
+            margin-bottom: 6px;
+        }
+
+        .footer-col a {
+            font-size: 13px;
+            color: var(--ink);
+            text-decoration: none;
+            width: fit-content;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s ease;
+        }
+
+        .footer-col a:hover {
+            border-bottom-color: var(--ink);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            padding-top: 24px;
+            border-top: 1px solid var(--line);
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        /* Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .reveal.in {
+            opacity: 1;
+            transform: none;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            .reveal {
+                opacity: 1;
+                transform: none;
+                transition: none;
+            }
+
+            .flow-step[data-state="running"] .flow-state::before {
+                animation: none;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .section-head,
+            .closing-body {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .section-head {
+                gap: 20px;
+            }
+
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+
+            .artifacts {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .closing-body .lede,
+            .closing-body .access {
+                grid-column: 1;
+            }
+
+            .closing-body .access {
+                justify-self: start;
+            }
+
+            .closing-body {
+                gap: 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding-top: 118px;
+            }
+
+            .hero-bottom {
+                grid-template-columns: 1fr;
+                gap: 36px;
+            }
+
+            .access {
+                justify-self: start;
+            }
+
+            .access-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .access-form .btn {
+                justify-content: center;
+            }
+
+            .footer-top {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-meta {
+                padding-bottom: 56px;
+            }
+
+            .hero-meta .label:last-child {
+                display: none;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .artifacts {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header" id="site-header">
+        <div class="container">
+            <a href="/" class="brand" aria-label="FounderGraph AI — home">
+                <svg viewBox="0 0 80 40" fill="none" aria-hidden="true">
+                    <path d="M10 10V30M10 10H20M10 20H18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M41.07 12.93A10 10 0 1 0 41.07 27.07L41.07 20H34" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M57 10L50 30M57 10L64 30M52.5 23H61.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M70 10V30" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                </svg>
+            </a>
+            <div class="header-right">
+                <div class="nav-drop" id="solutions-nav">
+                    <button class="nav-tab" id="solutions-btn" aria-expanded="false" aria-controls="solutions-menu">
+                        Solutions
+                        <svg viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                            <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="nav-menu" id="solutions-menu" hidden>
+                        <a href="/solutions/dealflow/" aria-current="page">Deal Pipeline <span class="tag">Demo</span></a>
+                        <a href="/solutions/diligence/">Due diligence co-pilot</a>
+                    </div>
+                </div>
+                <a href="#access" class="header-link">Request access</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-meta">
+                <span class="label"><span class="dot"></span>01 — Deal Pipeline</span>
+                <span class="label">Simulated fund · sample data</span>
+            </div>
+
+            <h1 class="display">
+                From application to
+                <em><span class="nw">scheduled call.</span></em>
+            </h1>
+
+            <div class="hero-bottom">
+                <p class="lede">
+                    No manual admin. Every inbound pitch goes through one automated
+                    pipeline, so the team spends time judging founders — not on
+                    spreadsheets and email threads.
+                </p>
+
+                <div class="access">
+                    <form class="access-form" action="https://formspree.io/f/mjgaanjk" method="POST">
+                        <input type="email" name="email" placeholder="Work email" aria-label="Work email" required>
+                        <input type="hidden" name="_origin" value="foundergraph-vc-hero">
+                        <button type="submit" class="btn">
+                            Request access
+                            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live workflow demo -->
+    <section class="section" id="demo">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="label">02 — Demo</span>
+                <h2 class="section-title">How it runs</h2>
+            </div>
+
+                <div class="workspace">
+                    <!-- Application entry -->
+                    <div class="panel reveal">
+                        <div class="panel-head">
+                            <span class="label">Application experiences</span>
+                            <span class="label">Pick one for your site</span>
+                        </div>
+                        <div class="intake-options">
+                            <a class="intake-option" href="/solutions/dealflow/apply/?style=plain">
+                                <span>
+                                    <span class="intake-option-name">Plain form</span>
+                                    <span class="intake-option-desc">The full application on a single page.</span>
+                                </span>
+                                <span class="intake-option-arrow" aria-hidden="true">→</span>
+                            </a>
+                            <a class="intake-option" href="/solutions/dealflow/apply/?style=typeform">
+                                <span>
+                                    <span class="intake-option-name">Typeform-style</span>
+                                    <span class="intake-option-desc">One question at a time, with a progress bar.</span>
+                                </span>
+                                <span class="intake-option-arrow" aria-hidden="true">→</span>
+                            </a>
+                            <a class="intake-option" href="/solutions/dealflow/apply/?style=agent">
+                                <span>
+                                    <span class="intake-option-name">Agent-led</span>
+                                    <span class="intake-option-desc">The founder answers in a conversation.</span>
+                                </span>
+                                <span class="intake-option-arrow" aria-hidden="true">→</span>
+                            </a>
+                        </div>
+                        <p class="intake-note">Any of the three can sit on your fund's site — each feeds the same deal pipeline.</p>
+                    </div>
+
+                    <!-- Workflow -->
+                    <div class="panel reveal">
+                        <div class="panel-head">
+                            <span class="label">Workflow</span>
+                        </div>
+                        <ol class="flow" id="workflow">
+                            <li class="flow-step" data-step="capture" data-state="queued">
+                                <span class="flow-index">01</span>
+                                <div class="flow-body">
+                                    <h3>Capture</h3>
+                                    <p>One structured application: company, stage, MRR, ask, traction and deck.</p>
+                                </div>
+                                <span class="flow-state"></span>
+                            </li>
+                            <li class="flow-step" data-step="log" data-state="queued">
+                                <span class="flow-index">02</span>
+                                <div class="flow-body">
+                                    <h3>Log</h3>
+                                    <p>A row lands in the shared deal sheet; the founder is confirmed and the team notified.</p>
+                                </div>
+                                <span class="flow-state"></span>
+                            </li>
+                            <li class="flow-step" data-step="decide" data-state="queued">
+                                <span class="flow-index">03</span>
+                                <div class="flow-body">
+                                    <h3>Decide in one click</h3>
+                                    <p>A partner sets Status to Interested — the only manual action.</p>
+                                </div>
+                                <span class="flow-state"></span>
+                            </li>
+                            <li class="flow-step" data-step="engage" data-state="queued">
+                                <span class="flow-index">04</span>
+                                <div class="flow-body">
+                                    <h3>Engage</h3>
+                                    <p>The founder is emailed a booking link and picks a slot.</p>
+                                </div>
+                                <span class="flow-state"></span>
+                            </li>
+                            <li class="flow-step" data-step="track" data-state="queued">
+                                <span class="flow-index">05</span>
+                                <div class="flow-body">
+                                    <h3>Track</h3>
+                                    <p>The meeting time is written back to the same row.</p>
+                                </div>
+                                <span class="flow-state"></span>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Artifacts -->
+                <div class="artifacts reveal" id="artifacts">
+                    <div class="artifact" data-artifact="row">
+                        <span class="label">Deal sheet row</span>
+                        <p class="artifact-value">Waiting for a run</p>
+                    </div>
+                    <div class="artifact" data-artifact="confirm">
+                        <span class="label">Founder confirmation</span>
+                        <p class="artifact-value">Waiting for a run</p>
+                    </div>
+                    <div class="artifact" data-artifact="booking">
+                        <span class="label">Booking link</span>
+                        <p class="artifact-value">Waiting for a run</p>
+                    </div>
+                    <div class="artifact" data-artifact="meeting">
+                        <span class="label">Meeting time</span>
+                        <p class="artifact-value">Waiting for a run</p>
+                    </div>
+                </div>
+        </div>
+    </section>
+
+    <!-- Closing -->
+    <section class="closing" id="access">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="label">03 — Access</span>
+                <h2 class="closing-title">Run your fund's next workflow <em>through the <span class="nw">co-pilot</span></em>.</h2>
+            </div>
+
+            <div class="closing-body">
+                <p class="lede reveal">
+                    Deployed in your cloud, under your brand. Start with the deal
+                    pipeline, then add diligence, memos and monitoring as you grow.
+                </p>
+
+                <div class="access reveal">
+                    <form class="access-form" action="https://formspree.io/f/mjgaanjk" method="POST">
+                        <input type="email" name="email" placeholder="Work email" aria-label="Work email" required>
+                        <input type="hidden" name="_origin" value="foundergraph-vc-cta">
+                        <button type="submit" class="btn">
+                            Request access
+                            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </form>
+                    <div class="fineprint">Your brand, your cloud, your data.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">FounderGraph AI</div>
+                <div class="footer-cols">
+                    <div class="footer-col">
+                        <span class="label">Solutions</span>
+                        <a href="/solutions/dealflow/">Deal Pipeline</a>
+                        <a href="/solutions/diligence/">Due diligence</a>
+                    </div>
+                    <div class="footer-col">
+                        <span class="label">Company</span>
+                        <a href="#">Privacy</a>
+                        <a href="#">Terms</a>
+                    </div>
+                    <div class="footer-col">
+                        <span class="label">Elsewhere</span>
+                        <a href="#">X</a>
+                        <a href="#">LinkedIn</a>
+                        <a href="#">GitHub</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2026 FounderGraph AI</span>
+                <span>AI Solutions for Venture Capital</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Demo state. DEMO_SSE can stream live progress from your backend.
+        const DEMO_SSE = ''; // optional progress stream from your backend
+
+        // Header hairline on scroll
+        const header = document.getElementById('site-header');
+        const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 8);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+
+        // Solutions dropdown
+        const navDrop = document.getElementById('solutions-nav');
+        const navBtn = document.getElementById('solutions-btn');
+        const navMenu = document.getElementById('solutions-menu');
+        const setMenu = (open) => {
+            navMenu.hidden = !open;
+            navBtn.setAttribute('aria-expanded', String(open));
+        };
+        navBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            setMenu(navMenu.hidden);
+        });
+        document.addEventListener('click', (e) => {
+            if (!navDrop.contains(e.target)) setMenu(false);
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') setMenu(false);
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Reveal on scroll
+        const items = document.querySelectorAll('.reveal');
+        if ('IntersectionObserver' in window) {
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in');
+                        io.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+            items.forEach((el, i) => {
+                el.style.transitionDelay = `${Math.min(i % 3, 2) * 70}ms`;
+                io.observe(el);
+            });
+        } else {
+            items.forEach(el => el.classList.add('in'));
+        }
+        // Workflow hooks — call these from your n8n progress stream.
+        const STEP_LABELS = { queued: '', running: 'Running', done: 'Done' };
+        window.FGWorkflow = {
+            setStep(id, state) {
+                const el = document.querySelector(`[data-step="${id}"]`);
+                if (!el || !(state in STEP_LABELS)) return;
+                el.dataset.state = state;
+                el.querySelector('.flow-state').textContent = STEP_LABELS[state];
+            },
+            setArtifact(id, text) {
+                const el = document.querySelector(`[data-artifact="${id}"]`);
+                if (!el) return;
+                el.dataset.filled = 'true';
+                el.querySelector('.artifact-value').textContent = text;
+            },
+            reset() {
+                document.querySelectorAll('.flow-step').forEach(el => {
+                    el.dataset.state = 'queued';
+                    el.querySelector('.flow-state').textContent = '';
+                });
+                document.querySelectorAll('.artifact').forEach(el => {
+                    el.dataset.filled = 'false';
+                    el.querySelector('.artifact-value').textContent = 'Waiting for a run';
+                });
+            }
+        };
+
+        // Open the optional progress stream.
+        if (DEMO_SSE && 'EventSource' in window) {
+            const stream = new EventSource(DEMO_SSE);
+            stream.addEventListener('step', (e) => {
+                try {
+                    const data = JSON.parse(e.data);
+                    window.FGWorkflow.setStep(data.id, data.state);
+                } catch (err) { /* ignore malformed events */ }
+            });
+            stream.addEventListener('artifact', (e) => {
+                try {
+                    const data = JSON.parse(e.data);
+                    window.FGWorkflow.setArtifact(data.id, data.text);
+                } catch (err) { /* ignore malformed events */ }
+            });
+        }
+
+    </script>
+</body>
+</html>

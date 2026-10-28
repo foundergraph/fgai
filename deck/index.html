@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FounderGraph AI | Deal Pipeline — pipeline demo</title>
+    <meta name="description" content="A short walkthrough of the FounderGraph AI deal pipeline: from application to scheduled call.">
+
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <link rel="icon" type="image/png" href="/static/icon.png">
+    <link rel="apple-touch-icon" href="/static/icon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --paper: #F4F2ED;
+            --ink: #111111;
+            --muted: #6E6B66;
+            --line: rgba(17, 17, 17, 0.14);
+            --accent: #E5431F;
+            --pad: clamp(20px, 4vw, 48px);
+            --max: 1320px;
+            --chrome: 88px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            height: 100%;
+            background: var(--paper);
+            color: var(--ink);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+        }
+
+        /* ---------- Chrome ---------- */
+
+        .progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--line);
+            z-index: 20;
+        }
+        .progress span {
+            display: block;
+            height: 100%;
+            width: 0;
+            background: var(--accent);
+            transition: width .6s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .wordmark {
+            position: fixed;
+            top: 30px;
+            left: var(--pad);
+            z-index: 20;
+            display: inline-flex;
+            align-items: center;
+            color: var(--ink);
+        }
+        .wordmark svg {
+            display: block;
+            width: 56px;
+            height: auto;
+        }
+
+        .chrome {
+            position: fixed;
+            left: var(--pad);
+            right: var(--pad);
+            bottom: 28px;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            pointer-events: none;
+        }
+        .chrome-title {
+            font-size: 11px;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+        .chrome-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            pointer-events: auto;
+        }
+        .counter {
+            font-size: 12px;
+            letter-spacing: .06em;
+            color: var(--muted);
+            font-variant-numeric: tabular-nums;
+            min-width: 64px;
+            text-align: right;
+        }
+        .nav { display: flex; gap: 8px; }
+        .nav button {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--line);
+            border-radius: 50%;
+            background: transparent;
+            color: var(--ink);
+            font-size: 16px;
+            line-height: 1;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            transition: background .2s ease, color .2s ease, border-color .2s ease;
+        }
+        .nav button:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+        .nav button:disabled { opacity: .28; cursor: default; }
+        .nav button:disabled:hover { background: transparent; color: var(--ink); border-color: var(--line); }
+
+        /* ---------- Slides ---------- */
+
+        .deck { position: fixed; inset: 0; overflow: hidden; }
+
+        .track {
+            display: flex;
+            height: 100%;
+            transition: transform .65s cubic-bezier(.4, 0, .2, 1);
+            will-change: transform;
+        }
+
+        .slide {
+            flex: 0 0 100%;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: none;
+        }
+        .slide::-webkit-scrollbar { width: 0; height: 0; }
+
+        .slide-inner {
+            min-height: 100%;
+            width: 100%;
+            max-width: var(--max);
+            margin: 0 auto;
+            padding: calc(var(--chrome) + 16px) var(--pad) var(--chrome);
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: clamp(20px, 4vh, 44px);
+        }
+
+        .slide-kicker {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+        .slide-kicker .dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+            flex: none;
+        }
+        .slide-kicker .meta {
+            margin-left: auto;
+            letter-spacing: .1em;
+        }
+
+        .slide-body {
+            align-self: center;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(20px, 3.4vh, 36px);
+            padding-bottom: clamp(0px, 3vh, 28px);
+        }
+
+        .display {
+            font-size: clamp(38px, 6.4vw, 96px);
+            font-weight: 300;
+            line-height: .98;
+            letter-spacing: -.045em;
+        }
+        .display em {
+            display: block;
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-style: italic;
+            font-weight: 400;
+            letter-spacing: -.02em;
+        }
+        .display.sm { font-size: clamp(32px, 4.6vw, 66px); }
+
+        .lede {
+            max-width: 56ch;
+            font-size: clamp(16px, 1.35vw, 19px);
+            font-weight: 400;
+            line-height: 1.55;
+            color: var(--muted);
+        }
+        .lede + .lede { margin-top: -10px; }
+
+        /* Three columns — application experiences */
+        .cols {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(20px, 3vw, 44px);
+            border-top: 1px solid var(--line);
+            padding-top: 22px;
+        }
+        .col h3 {
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: -.01em;
+            margin-bottom: 8px;
+        }
+        .col p {
+            font-size: 14.5px;
+            line-height: 1.55;
+            color: var(--muted);
+        }
+        .cols-note {
+            font-size: 13.5px;
+            color: var(--muted);
+            margin-top: -8px;
+        }
+        .cols.two { grid-template-columns: 1fr 1fr; }
+        .cols.two .col h3 {
+            font-size: clamp(19px, 1.8vw, 23px);
+            font-weight: 400;
+        }
+        .cols.two .col .label {
+            display: block;
+            font-size: 10.5px;
+            letter-spacing: .13em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 14px;
+        }
+        .cols.two .col p {
+            font-size: clamp(15px, 1.25vw, 17px);
+            max-width: 44ch;
+        }
+
+        /* Workflow steps */
+        .flow {
+            list-style: none;
+            border-top: 1px solid var(--line);
+        }
+        .flow li {
+            display: grid;
+            grid-template-columns: 56px minmax(0, 220px) minmax(0, 1fr);
+            gap: clamp(12px, 2vw, 32px);
+            align-items: baseline;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--line);
+        }
+        .flow .n {
+            font-size: 11px;
+            letter-spacing: .1em;
+            color: var(--muted);
+            font-variant-numeric: tabular-nums;
+        }
+        .flow h3 {
+            font-size: clamp(16px, 1.5vw, 19px);
+            font-weight: 400;
+            letter-spacing: -.01em;
+        }
+        .flow p {
+            font-size: 14.5px;
+            line-height: 1.5;
+            color: var(--muted);
+        }
+
+        /* Artifacts */
+        .artifacts {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border: 1px solid var(--line);
+        }
+        .artifact {
+            padding: 20px;
+            min-height: 132px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 24px;
+        }
+        .artifact + .artifact { border-left: 1px solid var(--line); }
+        .artifact .label {
+            font-size: 10.5px;
+            letter-spacing: .13em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+        .artifact p {
+            font-size: 14.5px;
+            line-height: 1.45;
+        }
+
+        /* Closing */
+        .fineprint {
+            font-size: 12.5px;
+            color: var(--muted);
+        }
+        .closing-link {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 10px;
+            font-size: clamp(17px, 1.6vw, 21px);
+            color: var(--ink);
+            text-decoration: none;
+            border-bottom: 1px solid var(--line);
+            padding-bottom: 4px;
+            width: fit-content;
+        }
+        .closing-link span { color: var(--muted); }
+        .closing-link:hover { border-color: var(--ink); }
+
+        .hint {
+            font-size: 12px;
+            letter-spacing: .06em;
+            color: var(--muted);
+        }
+        .hint kbd {
+            font-family: inherit;
+            border: 1px solid var(--line);
+            border-radius: 4px;
+            padding: 1px 5px;
+            font-size: 11px;
+        }
+
+        /* ---------- Responsive ---------- */
+
+        @media (max-width: 900px) {
+            .cols, .cols.two { grid-template-columns: 1fr; gap: 22px; }
+            .flow li { grid-template-columns: 40px 1fr; }
+            .flow p { grid-column: 2; }
+            .artifacts { grid-template-columns: 1fr 1fr; }
+            .artifact:nth-child(3) { border-left: none; }
+            .artifact:nth-child(n+3) { border-top: 1px solid var(--line); }
+        }
+
+        @media (max-width: 560px) {
+            .chrome-title { display: none; }
+            .artifacts { grid-template-columns: 1fr; }
+            .artifact + .artifact { border-left: none; border-top: 1px solid var(--line); }
+            .slide-inner { gap: 16px; }
+            .slide-body { align-self: start; padding-top: 8px; }
+            .slide-kicker { flex-wrap: wrap; row-gap: 6px; }
+            .slide-kicker .meta { margin-left: 0; flex-basis: 100%; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .track, .progress span, .nav button { transition: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="progress" aria-hidden="true"><span id="progress"></span></div>
+<a href="/" class="wordmark" aria-label="FounderGraph AI — home">
+    <svg viewBox="0 0 80 40" fill="none" aria-hidden="true">
+        <path d="M10 10V30M10 10H20M10 20H18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M41.07 12.93A10 10 0 1 0 41.07 27.07L41.07 20H34" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M57 10L50 30M57 10L64 30M52.5 23H61.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M70 10V30" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+    </svg>
+</a>
+
+<main class="deck" id="deck" aria-label="Pipeline demo slides">
+    <div class="track" id="track">
+
+        <!-- 01 · Cover -->
+        <section class="slide" aria-label="Cover">
+            <div class="slide-inner">
+                <span class="slide-kicker"><span class="dot"></span>01 — Pipeline demo <span class="meta">Simulated fund · sample data</span></span>
+                <div class="slide-body">
+                    <h1 class="display">
+                        From application to
+                        <em>scheduled call.</em>
+                    </h1>
+                    <p class="lede">
+                        A live walkthrough of an AI-native venture workflow. Every inbound
+                        pitch goes through one automated pipeline — captured, logged,
+                        reviewed in one click, booked and tracked.
+                    </p>
+                    <p class="hint">Move with <kbd>←</kbd> <kbd>→</kbd></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 02 · Problem -->
+        <section class="slide" aria-label="The problem">
+            <div class="slide-inner">
+                <span class="slide-kicker"><span class="dot"></span>02 — The problem</span>
+                <div class="slide-body">
+                    <h2 class="display sm">
+                        Inbound is a
+                        <em>queue of admin.</em>
+                    </h2>
+                    <p class="lede">
+                        A pitch arrives as an email, a forwarded deck, a form response.
+                        Then someone copies it into the deal sheet, sends the confirmation,
+                        chases the call. The work is not the judgment — it is the handoffs.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 03 · Pipeline -->
+        <section class="slide" aria-label="The pipeline">
+            <div class="slide-inner">
+                <span class="slide-kicker"><span class="dot"></span>03 — The pipeline</span>
+                <div class="slide-body">
+                    <h2 class="display sm">
+                        One pipeline.
+                        <em>Every pitch.</em>
+                    </h2>
+                    <p class="lede">
+                        From application to scheduled call, in the same system your team
+                        already uses. No spreadsheets, no email threads, no dropped requests.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 04 · Intake -->
+        <section class="slide" aria-label="Application experiences">
+            <div class="slide-inner">
+                <span class="slide-kicker"><span class="dot"></span>04 — Application experiences</span>
+                <div class="slide-body">
+                    <h2 class="display sm">
+                        Any front door.
+                        <em>One pipeline.</em>
+                    </h2>
+
+                    <div class="cols">
+                        <div class="col">
+                            <h3>Plain form</h3>
+                            <p>The full application on a single page.</p>
+                        </div>
+                        <div class="col">
+                            <h3>Typeform-style</h3>
+                            <p>One question at a time, with a progress bar.</p>
+                        </div>
+                        <div class="col">
+                            <h3>Agent-led</h3>
+                            <p>The founder answers in a conversation.</p>
+                        </div>
+                    </div>
+                    <p class="cols-note">Any of the three can sit on your fund's site — each feeds the same deal pipeline.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 05 · Workflow -->
+        <section class="slide" aria-label="The workflow">
+            <div class="slide-inner">
+                <span class="slide-kicker"><span class="dot"></span>05 — The workflow</span>
+                <div class="slide-body">
+                    <h2 class="display sm">
+                        What runs,
+                        <em>step by step.</em>
+                    </h2>
+
+                    <ol class="flow">
+                        <li>
+                            <span class="n">01</span>
+                            <h3>Capture</h3>
+                            <p>One structured application: company, stage, MRR, ask, traction and deck.</p>
+                        </li>
+                        <li>
+                            <span class="n">02</span>
+                            <h3>Log</h3>
+                            <p>A row lands in the shared deal sheet; the founder is confirmed and the team notified.</p>
+                        </li>
+                        <li>
+                            <span class="n">03</span>
+                            <h3>Decide</h3>
+                            <p>A partner sets Status to Interested — the only manual action.</p>
+                        </li>
+                        <li>
+                            <span class="n">04</span>
+                            <h3>Engage</h3>
+                            <p>The founder is emailed a booking link and picks a slot.</p>
+                        </li>
+                        <li>
+                            <span class="n">05</span>
+                            <h3>Track</h3>
+                            <p>The meeting time is written back to the same row.</p>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- 06 · Artifacts -->
+        <section class="slide" aria-label="What the pipeline leaves behind">
+            <div class="slide-inner">
+                <span class="slide-kicker"><span class="dot"></span>06 — What it leaves behind</span>
+                <div class="slide-body">
+                    <h2 class="display sm">
+                        Every step leaves
+                        <em>a record.</em>
+                    </h2>
+
+                    <div class="artifacts">
+                        <div class="artifact">
+                            <span class="label">Deal sheet row</span>
+                            <p>Aster Labs · Seed · Interested</p>
+                        </div>
+                        <div class="artifact">
+                            <span class="label">Founder confirmation</span>
+                            <p>Sent on submission</p>
+                        </div>
+                        <div class="artifact">
+                            <span class="label">Booking link</span>
+                            <p>Sent when a partner marks Interested</p>
+                        </div>
+                        <div class="artifact">
+                            <span class="label">Meeting time</span>
+                            <p>Written back after the founder books</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 07 · One click -->
+        <section class="slide" aria-label="The only manual action">
+            <div class="slide-inner">
+                <span class="slide-kicker"><span class="dot"></span>07 — The only manual action</span>
+                <div class="slide-body">
+                    <h2 class="display sm">
+                        One click
+                        <em>decides.</em>
+                    </h2>
+                    <p class="lede">
+                        A partner marks the pitch Interested. Everything before and after
+                        runs itself — no copying, no chasing, no spreadsheet drift.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 08 · One more thing -->
+        <section class="slide" aria-label="One more thing">
+            <div class="slide-inner">
+                <span class="slide-kicker"><span class="dot"></span>08 — One more thing</span>
+                <div class="slide-body">
+                    <h2 class="display sm">
+                        The co-pilot reads
+                        <em>before you do.</em>
+                    </h2>
+
+                    <div class="cols two">
+                        <div class="col">
+                            <span class="label">On application</span>
+                            <h3>Screen for fit</h3>
+                            <p>An agent reads every application against your thesis — fit score, supporting evidence and a recommendation — before a partner opens it.</p>
+                        </div>
+                        <div class="col">
+                            <span class="label">Before the call</span>
+                            <h3>Brief the meeting</h3>
+                            <p>Once a meeting is booked, the agent researches the company, market and founders, then drafts a meeting brief with the areas to focus on.</p>
+                        </div>
+                    </div>
+                    <p class="cols-note">Same pipeline. The judgment stays with your team.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 09 · Deployment -->
+        <section class="slide" aria-label="Deployment">
+            <div class="slide-inner">
+                <span class="slide-kicker"><span class="dot"></span>09 — Deployment</span>
+                <div class="slide-body">
+                    <h2 class="display sm">
+                        Your cloud.
+                        <em>Your brand.</em>
+                    </h2>
+                    <p class="lede">
+                        Deployed inside the fund's own cloud, under the fund's brand.
+                        Founders apply through your portal; your data never leaves your
+                        infrastructure.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10 · Closing -->
+        <section class="slide" aria-label="Access">
+            <div class="slide-inner">
+                <span class="slide-kicker"><span class="dot"></span>10 — Access</span>
+                <div class="slide-body">
+                    <h2 class="display sm">
+                        Run your next workflow
+                        <em>through the co-pilot.</em>
+                    </h2>
+                    <p class="lede">
+                        Deployed in your cloud, under your brand. Start with the deal
+                        pipeline, then add diligence, memos and monitoring as you grow.
+                    </p>
+                    <a class="closing-link" href="https://foundergraph.ai">foundergraph.ai <span>→</span></a>
+                    <p class="fineprint">Your brand, your cloud, your data.</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<div class="chrome">
+    <span class="chrome-title">Deal Pipeline · Pipeline demo</span>
+    <div class="chrome-right">
+        <span class="counter" id="counter">01 / 10</span>
+        <div class="nav">
+            <button type="button" id="prev" aria-label="Previous slide">←</button>
+            <button type="button" id="next" aria-label="Next slide">→</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const track = document.getElementById('track');
+    const counter = document.getElementById('counter');
+    const progress = document.getElementById('progress');
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+    const total = slides.length;
+    let index = 0;
+
+    const pad = (n) => String(n).padStart(2, '0');
+
+    function go(n, push = true) {
+        index = Math.max(0, Math.min(total - 1, n));
+        track.style.transform = `translateX(${-index * 100}%)`;
+        counter.textContent = `${pad(index + 1)} / ${pad(total)}`;
+        progress.style.width = `${((index + 1) / total) * 100}%`;
+        prevBtn.disabled = index === 0;
+        nextBtn.disabled = index === total - 1;
+        slides.forEach((s, i) => s.setAttribute('aria-hidden', i === index ? 'false' : 'true'));
+        if (push) history.replaceState(null, '', '#' + (index + 1));
+    }
+
+    const next = () => go(index + 1);
+    const prev = () => go(index - 1);
+
+    prevBtn.addEventListener('click', prev);
+    nextBtn.addEventListener('click', next);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.metaKey || e.ctrlKey || e.altKey) return;
+        switch (e.key) {
+            case 'ArrowRight':
+            case 'ArrowDown':
+            case 'PageDown':
+            case ' ':
+            case 'Enter':
+                e.preventDefault();
+                next();
+                break;
+            case 'ArrowLeft':
+            case 'ArrowUp':
+            case 'PageUp':
+            case 'Backspace':
+                e.preventDefault();
+                prev();
+                break;
+            case 'Home':
+                e.preventDefault();
+                go(0);
+                break;
+            case 'End':
+                e.preventDefault();
+                go(total - 1);
+                break;
+        }
+    });
+
+    // Swipe on touch devices.
+    let touchX = null;
+    document.addEventListener('touchstart', (e) => {
+        touchX = e.changedTouches[0].clientX;
+    }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+        if (touchX === null) return;
+        const dx = e.changedTouches[0].clientX - touchX;
+        touchX = null;
+        if (Math.abs(dx) > 48) (dx < 0 ? next : prev)();
+    }, { passive: true });
+
+    // Deep links: /deck/#3 opens the third slide.
+    const fromHash = parseInt(location.hash.replace('#', ''), 10);
+    go(Number.isFinite(fromHash) ? fromHash - 1 : 0, false);
+</script>
+</body>
+</html>

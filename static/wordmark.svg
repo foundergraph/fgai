@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 40" fill="none" role="img" aria-label="FounderGraph AI">
+    <title>FounderGraph AI</title>
+    <g stroke="#111111" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 10V30M4 10H15M4 20H12"/>
+        <ellipse cx="29" cy="20" rx="8" ry="10"/>
+        <path d="M43 10V22.7A8 7.3 0 0 0 59 22.7V10"/>
+        <path d="M65 30V10L79 30V10"/>
+        <path d="M85 10V30M85 10H89A8 10 0 0 1 89 30H85"/>
+        <path d="M103 30V10H113M103 20H111M103 30H113"/>
+        <path d="M119 30V10M119 10H125A6 5 0 0 1 125 20H119M125 20L132 30"/>
+        <path d="M155.07 12.93A10 10 0 1 0 155.07 27.07L155.07 20H145"/>
+        <path d="M161 30V10M161 10H167A6 5 0 0 1 167 20H161M167 20L174 30"/>
+        <path d="M187 10L180 30M187 10L194 30M182.5 23H191.5"/>
+        <path d="M200 30V10M200 10H206A6 5 0 0 1 206 20H200"/>
+        <path d="M218 10V30M232 10V30M218 20H232"/>
+        <path d="M251 10L244 30M251 10L258 30M246.5 23H255.5"/>
+        <path d="M264 10V30"/>
+    </g>
+</svg>

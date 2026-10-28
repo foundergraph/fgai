@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 40" fill="none" role="img" aria-label="FounderGraph AI">
+    <title>FounderGraph AI</title>
+    <path d="M10 10V30M10 10H20M10 20H18" stroke="#111111" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M41.07 12.93A10 10 0 1 0 41.07 27.07L41.07 20H34" stroke="#111111" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M57 10L50 30M57 10L64 30M52.5 23H61.5" stroke="#111111" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M70 10V30" stroke="#111111" stroke-width="2.2" stroke-linecap="round"/>
+</svg>
