@@ -123,14 +123,6 @@
             width: 100%;
         }
 
-        .hero-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 24px;
-            padding-bottom: clamp(36px, 7vh, 80px);
-        }
-
         .display {
             font-size: clamp(40px, 6.4vw, 92px);
             font-weight: 300;
@@ -176,15 +168,18 @@
             border-color: var(--ink);
         }
 
+        .launch-note {
+            margin-top: clamp(20px, 3vh, 28px);
+            font-size: clamp(16px, 1.6vw, 19px);
+            font-weight: 300;
+            line-height: 1.6;
+            color: #45433F;
+        }
+
         @media (max-width: 768px) {
             .hero {
                 padding-top: 118px;
             }
-
-            .hero-meta {
-                padding-bottom: 36px;
-            }
-
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -211,14 +206,12 @@
         <!-- Hero -->
         <section class="hero">
             <div class="container">
-                <div class="hero-meta">
-                    <span class="label"><span class="dot"></span>Launching soon</span>
-                </div>
-
                 <h1 class="display">
                     AI Solutions
                     <em>for Venture Capital</em>
                 </h1>
+
+                <p class="launch-note">Launching soon.</p>
 
                 <div class="hero-bottom">
                     <div class="contact">
